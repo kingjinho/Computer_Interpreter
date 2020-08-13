@@ -9,6 +9,7 @@ import kotlin.system.exitProcess
 
 class Lox {
     companion object {
+        var hadError = false
         @Throws(IOException::class)
         fun main(args: Array<String>) {
             /**
@@ -35,6 +36,7 @@ class Lox {
         private fun runFile(path: String) {
             val bytes = Files.readAllBytes(Paths.get(path))
             run(String(bytes, Charset.defaultCharset()))
+            if(hadError) exitProcess(65) //indicate an error in the exit code
         }
 
         //without arguments
@@ -48,6 +50,7 @@ class Lox {
                 val line = reader.readLine()
                     ?: break //read a line of input from the user on the command line and returns the result
                 run(line)
+                hadError = false
             }
         }
 
