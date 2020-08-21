@@ -14,8 +14,8 @@ class Lox {
         fun main(args: Array<String>) {
             /**
              * 2 ways to run code
-             * - start jlox from command line and give it a path to a file, and executes
-             * - start jlox without arguments -> let you enter and execute code one line at a time , a.k.a REPL
+             * - 1:  from command line and give it a path to a file, jlox reads the file and executes it
+             * - 2:  without arguments -> let you enter and execute code one line at a time , a.k.a REPL
              * */
             when {
                 args.size > 1 -> {
@@ -48,15 +48,16 @@ class Lox {
             while (true) {
                 println("> ")
                 val line = reader.readLine()
-                    ?: break //read a line of input from the user on the command line and returns the result
+                        ?: break //read a line of input from the user on the command line and returns the result
                 run(line)
                 hadError = false
             }
         }
 
+        //actual core function
         private fun run(source: String) {
             val scanner = Scanner(source)
-            val tokens = scanner.scanToken()
+            val tokens : List<Token> = scanner.scanTokens()
 
             for (token in tokens) {
                 println(token)
