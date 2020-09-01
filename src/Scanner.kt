@@ -48,8 +48,7 @@ class Scanner(val source: String) {
 
     //Recognizing Lexemes
     private fun scanToken() {
-        var c = advance()
-        when (c) { //single character lexeme
+        when (val c = advance()) { //single character lexeme
             '(' -> addToken(LEFT_PAREN)
             ')' -> addToken(RIGHT_PAREN)
             '{' -> addToken(LEFT_BRACE)
@@ -78,7 +77,7 @@ class Scanner(val source: String) {
             else -> when {
                 isDigit(c) -> number()
                 isAlpha(c) -> identifier()
-                else -> Lox.error(line, "Unexpected character")
+                else -> error(line, "Unexpected character")
             }
         }
     }
@@ -92,7 +91,7 @@ class Scanner(val source: String) {
         addToken(type, null)
     }
 
-    private fun addToken(type: TokenType, literal: Object?) {
+    private fun addToken(type: TokenType, literal: Any?) {
         val text = source.substring(start, current)
         tokens.add(Token(type, text, literal, line))
     }
@@ -106,7 +105,7 @@ class Scanner(val source: String) {
     }
 
     private fun peek(): Char {
-        if (isAtEnd()) return "\\0" as Char // \0
+        if (isAtEnd()) return 0.toChar()
         return source.elementAt(current)
     }
 
@@ -116,7 +115,7 @@ class Scanner(val source: String) {
             advance()
         }
         if (isAtEnd()) {
-            Lox.error(line, "Unterminated string.")
+            error(line, "Unterminated string.")
             return
         }
 
